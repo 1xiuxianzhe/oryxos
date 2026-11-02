@@ -8,10 +8,11 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.1.0--SNAPSHOT-orange?style=flat-square" alt="version"/>
+  <a href="https://github.com/1xiuxianzhe/oryxos/actions/workflows/build.yml"><img src="https://github.com/1xiuxianzhe/oryxos/actions/workflows/build.yml/badge.svg" alt="build"/></a>
+  <img src="https://img.shields.io/badge/version-0.1.0-orange?style=flat-square" alt="version"/>
   <img src="https://img.shields.io/badge/JDK-21-orange?style=flat-square" alt="JDK 21"/>
   <a href="https://modelcontextprotocol.io"><img src="https://img.shields.io/badge/MCP-native-8A2BE2?style=flat-square" alt="MCP native"/></a>
-  <img src="https://img.shields.io/badge/deploy-single%20fat%20JAR-blue?style=flat-square" alt="single fat JAR"/>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-blue?style=flat-square" alt="Apache 2.0"/></a>
 </p>
 
 ---
@@ -21,7 +22,7 @@
 - **今天已经跑通的（单节点运行时内核）**：一个目录就是一个 Agent —— `.oryxos/agents/<name>/AGENT.md` 丢进工作区即热加载上线；自实现 ReAct 循环、10 个内置工具、MCP 接入、长期记忆、Webhook 通知、Cron 定时、四维白名单沙箱、三层审计落库、REST API、Web 管理台，全部打在一个 fat JAR 里。
 - **北极星（尚未实现）**：一句话提交任务，由一组 Agent（规划 / 执行 / 复核）自组织协作交付。见[路线图](#路线图)。
 
-> 本文档描述 **0.1.0-SNAPSHOT 的实际实现**。与 `docs/` 下早期规划文档冲突时，以代码为准。
+> 本文档描述 **0.1.0 的实际实现**。与 `docs/` 下早期规划文档冲突时，以代码为准。
 > 第一次使用？直接看 [使用指南](docs/GettingStarted.md)：构建、配置、启动、跑通第一个 Agent。
 
 ## Agent 公式
@@ -169,7 +170,7 @@ oryxos-boot          # Spring Boot 启动、自动装配、打成 fat JAR
 git clone <repo-url> oryxos
 cd oryxos
 mvn -DskipTests package
-# 产物: oryxos-boot/target/oryxos-boot-0.1.0-SNAPSHOT.jar
+# 产物: oryxos-boot/target/oryxos-boot-0.1.0.jar
 ```
 
 ### 2 · 配好密钥
@@ -197,7 +198,7 @@ $env:DEEPSEEK_API_KEY="sk-xxxx"
 # Windows
 bin\oryxos.cmd init
 # Linux / macOS / 任意平台
-java -jar oryxos-boot/target/oryxos-boot-0.1.0-SNAPSHOT.jar init
+java -jar oryxos-boot/target/oryxos-boot-0.1.0.jar init
 ```
 
 初始化会在启动目录下建 `.oryxos/`：
@@ -437,4 +438,4 @@ settings:
 
 ## 许可证
 
-仓库目前**未包含 LICENSE 文件**，许可证待定。在补齐许可证之前，请勿对外分发或商用。
+[Apache License 2.0](LICENSE)。可自由使用、修改、分发与商用，需保留版权与许可声明。

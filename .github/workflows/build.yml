@@ -1,0 +1,38 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build (JDK 21)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Build fat JAR
+        run: mvn -B -ntp -DskipTests package
+
+      - name: Upload fat JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: oryxos-boot
+          path: oryxos-boot/target/oryxos-boot-*.jar
+          if-no-files-found: error
+          retention-days: 14

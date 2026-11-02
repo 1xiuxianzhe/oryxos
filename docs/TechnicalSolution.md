@@ -2,7 +2,7 @@
 
 承接需求文档的定位判断：核心阶段交付的是 Agent OS 的运行时内核，能力上对齐业界开源 Agent OS 的基础层；让 OryxOS 成为真正企业级 Agent OS 的治理层（多租户、SSO、完整审计、Tool 治理）在扩展和社区阶段补齐。本技术方案只覆盖核心阶段的运行时内核，并在架构上为治理层预留扩展点。
 
-> **实现现状（0.1.0-SNAPSHOT，与下文规划的差异）**
+> **实现现状（0.1.0，与下文规划的差异）**
 > 本文件是规划期方案；当前实现以 `README.md` 与代码为准。已发生的偏差主要有：
 > - **Agent 定义改为目录化**：`.oryxos/agents/<name>/AGENT.md`（frontmatter + 正文）为主路径，`WorkspaceWatcher` 热加载；`.oryxos/profiles/*.yaml` 仅作 legacy 兼容，改完需重启。新增动态管理：REST CRUD、一句话生成草稿。
 > - **内置工具为 10 个**（文件/命令/HTTP/通知/记忆 + 演示用 `get_weather`），扩展路径是 MCP 与自实现 `OryxTool`；`SKILL.md`/`REFERENCE.md` 是 prompt 侧按需知识，不是工具。

@@ -3,7 +3,7 @@
 本文面向**第一次接触 OryxOS 的使用者**：从拿到源码到启动服务、配好模型、跑起第一个 Agent，
 每一步都给可复制的命令。想先了解项目定位与架构，看 [README](../README.md)。
 
-> 本文以 `0.1.0-SNAPSHOT` 为准。命令默认在**仓库根目录**执行；Windows 用 `bin\oryxos.cmd`，
+> 本文以 `0.1.0` 为准。命令默认在**仓库根目录**执行；Windows 用 `bin\oryxos.cmd`，
 > Linux / macOS / WSL 用 `./bin/oryxos.sh`。
 
 ---
@@ -139,7 +139,7 @@ oryxos:
 mvn -DskipTests package
 ```
 
-产物：`oryxos-boot/target/oryxos-boot-0.1.0-SNAPSHOT.jar`（含所有依赖与管理台静态资源）。
+产物：`oryxos-boot/target/oryxos-boot-0.1.0.jar`（含所有依赖与管理台静态资源）。
 
 - 第一次构建会下载依赖，耗时取决于网络。
 - 想跑测试：`mvn test`。
