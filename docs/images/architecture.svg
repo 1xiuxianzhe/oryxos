@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="2200" height="1300" xmlns="http://www.w3.org/2000/svg">
+<rect width="2200" height="1300" fill="#ffffff"/>
+<text x="1100" y="70" text-anchor="middle" font-size="32" fill="#263238" font-family="sans-serif">OryxOS 系统架构图</text>
+<rect x="550" y="110" width="1100" height="175" rx="8" ry="8" fill="#fffde7" stroke="#f0f4c3" stroke-width="2"/>
+<text x="1100" y="138" text-anchor="middle" font-size="18" fill="#37474f" font-family="sans-serif">接入层 · 对外门面</text>
+<rect x="875" y="155" width="210" height="115" rx="8" ry="8" fill="#e3f2fd" stroke="#1565c0" stroke-width="2"/>
+<text x="980" y="188" text-anchor="middle" font-size="15" fill="#0d47a1" font-family="sans-serif">CLI Channel</text>
+<text x="980" y="213" text-anchor="middle" font-size="12" fill="#546e7a" font-family="sans-serif">核心阶段内置渠道</text>
+<text x="980" y="260" text-anchor="middle" font-size="11" fill="#78909c" font-family="sans-serif">oryxos-channel-cli</text>
+<rect x="1115" y="155" width="210" height="115" rx="8" ry="8" fill="#e3f2fd" stroke="#1565c0" stroke-width="2"/>
+<text x="1220" y="188" text-anchor="middle" font-size="15" fill="#0d47a1" font-family="sans-serif">Web Service</text>
+<text x="1220" y="213" text-anchor="middle" font-size="12" fill="#546e7a" font-family="sans-serif">REST API 对外暴露</text>
+<text x="1220" y="260" text-anchor="middle" font-size="11" fill="#78909c" font-family="sans-serif">oryxos-web</text>
+<rect x="550" y="395" width="1100" height="175" rx="8" ry="8" fill="#fffde7" stroke="#f0f4c3" stroke-width="2"/>
+<text x="1100" y="423" text-anchor="middle" font-size="18" fill="#37474f" font-family="sans-serif">引擎层 · Agent 大脑</text>
+<rect x="755" y="440" width="210" height="115" rx="8" ry="8" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+<text x="860" y="473" text-anchor="middle" font-size="15" fill="#1b5e20" font-family="sans-serif">ReActLoop</text>
+<text x="860" y="498" text-anchor="middle" font-size="12" fill="#546e7a" font-family="sans-serif">自实现 Reason + Act</text>
+<text x="860" y="545" text-anchor="middle" font-size="11" fill="#78909c" font-family="sans-serif">oryxos-core</text>
+<rect x="995" y="440" width="210" height="115" rx="8" ry="8" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+<text x="1100" y="473" text-anchor="middle" font-size="15" fill="#1b5e20" font-family="sans-serif">PromptBuilder</text>
+<text x="1100" y="498" text-anchor="middle" font-size="12" fill="#546e7a" font-family="sans-serif">构造 ReAct 提示词</text>
+<text x="1100" y="545" text-anchor="middle" font-size="11" fill="#78909c" font-family="sans-serif">oryxos-core</text>
+<rect x="1235" y="440" width="210" height="115" rx="8" ry="8" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+<text x="1340" y="473" text-anchor="middle" font-size="15" fill="#1b5e20" font-family="sans-serif">ToolExecutor</text>
+<text x="1340" y="498" text-anchor="middle" font-size="12" fill="#546e7a" font-family="sans-serif">Tool 实际调度执行</text>
+<text x="1340" y="545" text-anchor="middle" font-size="11" fill="#78909c" font-family="sans-serif">oryxos-core</text>
+<rect x="550" y="680" width="1100" height="175" rx="8" ry="8" fill="#fffde7" stroke="#f0f4c3" stroke-width="2"/>
+<text x="1100" y="708" text-anchor="middle" font-size="18" fill="#37474f" font-family="sans-serif">能力层 · 三大核心能力</text>
+<rect x="755" y="725" width="210" height="115" rx="8" ry="8" fill="#f3e5f5" stroke="#6a1b9a" stroke-width="2"/>
+<text x="860" y="758" text-anchor="middle" font-size="15" fill="#4a148c" font-family="sans-serif">Provider</text>
+<text x="860" y="783" text-anchor="middle" font-size="12" fill="#546e7a" font-family="sans-serif">对接 LLM</text>
+<text x="860" y="830" text-anchor="middle" font-size="11" fill="#78909c" font-family="sans-serif">oryxos-provider</text>
+<rect x="995" y="725" width="210" height="115" rx="8" ry="8" fill="#f3e5f5" stroke="#6a1b9a" stroke-width="2"/>
+<text x="1100" y="758" text-anchor="middle" font-size="15" fill="#4a148c" font-family="sans-serif">Memory</text>
+<text x="1100" y="783" text-anchor="middle" font-size="12" fill="#546e7a" font-family="sans-serif">三层记忆统一门面</text>
+<text x="1100" y="830" text-anchor="middle" font-size="11" fill="#78909c" font-family="sans-serif">oryxos-memory</text>
+<rect x="1235" y="725" width="210" height="115" rx="8" ry="8" fill="#f3e5f5" stroke="#6a1b9a" stroke-width="2"/>
+<text x="1340" y="758" text-anchor="middle" font-size="15" fill="#4a148c" font-family="sans-serif">Tool</text>
+<text x="1340" y="783" text-anchor="middle" font-size="12" fill="#546e7a" font-family="sans-serif">内置 Tool + Plugin 接入</text>
+<text x="1340" y="830" text-anchor="middle" font-size="11" fill="#78909c" font-family="sans-serif">oryxos-tool</text>
+<rect x="550" y="965" width="1100" height="175" rx="8" ry="8" fill="#fffde7" stroke="#f0f4c3" stroke-width="2"/>
+<text x="1100" y="993" text-anchor="middle" font-size="18" fill="#37474f" font-family="sans-serif">基础层 · 工程地基</text>
+<rect x="635" y="1010" width="210" height="115" rx="8" ry="8" fill="#eceff1" stroke="#455a64" stroke-width="2"/>
+<text x="740" y="1043" text-anchor="middle" font-size="15" fill="#263238" font-family="sans-serif">Profile / Bootstrap</text>
+<text x="740" y="1068" text-anchor="middle" font-size="12" fill="#546e7a" font-family="sans-serif">Skill 加载与启动</text>
+<text x="740" y="1115" text-anchor="middle" font-size="11" fill="#78909c" font-family="sans-serif">oryxos-core</text>
+<rect x="875" y="1010" width="210" height="115" rx="8" ry="8" fill="#eceff1" stroke="#455a64" stroke-width="2"/>
+<text x="980" y="1043" text-anchor="middle" font-size="15" fill="#263238" font-family="sans-serif">Session 存储</text>
+<text x="980" y="1068" text-anchor="middle" font-size="12" fill="#546e7a" font-family="sans-serif">会话与对话历史</text>
+<text x="980" y="1115" text-anchor="middle" font-size="11" fill="#78909c" font-family="sans-serif">oryxos-storage</text>
+<rect x="1115" y="1010" width="210" height="115" rx="8" ry="8" fill="#eceff1" stroke="#455a64" stroke-width="2"/>
+<text x="1220" y="1043" text-anchor="middle" font-size="15" fill="#263238" font-family="sans-serif">SQLite</text>
+<text x="1220" y="1068" text-anchor="middle" font-size="12" fill="#546e7a" font-family="sans-serif">审计 day one 落库</text>
+<text x="1220" y="1115" text-anchor="middle" font-size="11" fill="#78909c" font-family="sans-serif">oryxos-storage</text>
+<rect x="1355" y="1010" width="210" height="115" rx="8" ry="8" fill="#eceff1" stroke="#455a64" stroke-width="2"/>
+<text x="1460" y="1043" text-anchor="middle" font-size="15" fill="#263238" font-family="sans-serif">配置与密钥</text>
+<text x="1460" y="1068" text-anchor="middle" font-size="12" fill="#546e7a" font-family="sans-serif">Provider 映射与密钥</text>
+<text x="1460" y="1115" text-anchor="middle" font-size="11" fill="#78909c" font-family="sans-serif">oryxos-core</text>
+<text x="70" y="153" font-size="18" fill="#37474f" font-family="sans-serif">启动入口</text>
+<rect x="70" y="165" width="200" height="90" rx="8" ry="8" fill="#fff3e0" stroke="#ef6c00" stroke-width="2"/>
+<text x="170" y="207" text-anchor="middle" font-size="15" fill="#e65100" font-family="sans-serif">oryxos-cli</text>
+<text x="170" y="245" text-anchor="middle" font-size="11" fill="#78909c" font-family="sans-serif">Picocli 入口</text>
+<rect x="70" y="285" width="200" height="90" rx="8" ry="8" fill="#fff3e0" stroke="#ef6c00" stroke-width="2"/>
+<text x="170" y="327" text-anchor="middle" font-size="15" fill="#e65100" font-family="sans-serif">oryxos-boot</text>
+<text x="170" y="365" text-anchor="middle" font-size="11" fill="#78909c" font-family="sans-serif">fat JAR</text>
+<text x="1930" y="723" font-size="18" fill="#37474f" font-family="sans-serif">外部依赖</text>
+<rect x="1930" y="735" width="200" height="90" rx="8" ry="8" fill="#fff3e0" stroke="#ef6c00" stroke-width="2"/>
+<text x="2030" y="785" text-anchor="middle" font-size="15" fill="#e65100" font-family="sans-serif">LLM 厂商 API</text>
+<rect x="1930" y="855" width="200" height="90" rx="8" ry="8" fill="#fff3e0" stroke="#ef6c00" stroke-width="2"/>
+<text x="2030" y="905" text-anchor="middle" font-size="15" fill="#e65100" font-family="sans-serif">外部 MCP Server</text>
+</svg>

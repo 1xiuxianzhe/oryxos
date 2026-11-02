@@ -1,0 +1,20 @@
+# 统一换行：源码按平台自动，脚本固定，二进制不转换
+* text=auto
+
+# Windows 批处理必须是 CRLF，否则 cmd.exe 解析可能出问题
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# Shell 脚本必须是 LF，否则 Linux/macOS 上 shebang 会失败
+*.sh text eol=lf
+
+# 二进制
+*.jar binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary

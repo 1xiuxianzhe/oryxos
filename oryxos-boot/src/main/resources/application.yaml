@@ -1,0 +1,108 @@
+spring:
+  application:
+    name: oryxos
+  threads:
+    virtual:
+      enabled: true
+  datasource:
+    url: jdbc:sqlite:${user.dir}/.oryxos/oryxos.db
+    driver-class-name: org.sqlite.JDBC
+    hikari:
+      maximum-pool-size: 1
+  jpa:
+    hibernate:
+      # 审计表 llm_calls 由 db/schema.sql 手工维护；其余表暂用 update 兜底建表。
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.community.dialect.SQLiteDialect
+        format_sql: false
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:db/schema.sql
+
+# 全局层 Provider 配置：声明这个实例接了哪些 LLM provider、凭证从哪个环境变量读。
+# 密钥一律走 ${ENV_VAR}，代码与配置里不出现明文。
+# 运行前需导出对应环境变量（Windows: set DEEPSEEK_API_KEY=xxx；Linux/macOS: export DEEPSEEK_API_KEY=xxx）。
+# 留空（不配置任何 provider）时应用可正常启动；配置了 provider 但 api-key 解析不到会在启动阶段明确报错。
+oryxos:
+  workspace: ${user.dir}/.oryxos
+  # 工具执行前的沙箱策略（核心阶段唯一实现：应用层白名单校验，不用 SecurityManager）。
+  # 沙箱是强制装配的：不存在"未装配就放行"的状态；本段只决定白名单内容与是否显式关闭。
+  # 注意：任一清单为空时，该维度【一律拒绝】——默认方向是收紧的，放开必须显式配置。
+  # 因此不配这段时，文件/命令/HTTP 类内置工具会全部拒绝，且原因只会是"不在白名单内"。
+  # 路径按解析后的真实路径判定（`..` 与符号链接绕不过去）；域名支持 * 通配，带标签边界。
+  # 命令按首个 token 精确匹配（大小写敏感）：配 echo 时 ECHO 会被拒。
+  sandbox:
+    # 白名单总开关。默认 true。
+    # 置为 false 时三个维度【全部放行】，下面两个清单的内容不再有任何约束力——
+    # 仅用于本地开发与调试。两条纪律：
+    #   1. 生产环境务必保持 true，建议显式写死 true，避免开发配置被误带上线；
+    #   2. 关闭时启动日志会打出醒目告警，便于一眼看出当前跑在"无校验"状态。
+    # 注意：无论开关取值，配置格式校验都会执行（空白条目一律启动即报错）。
+    # 本次演练显式开启：本地 webhook 推送必须能在校验下通过，才算真的验证了链路。
+    enabled: true
+    # 文件类工具（read_file / write_file / list_dir）允许的目录前缀。
+    allowed-paths:
+      - ${user.dir}
+    # 命令类工具（shell）允许的命令，取命令的第一个词精确匹配。
+    allowed-commands:
+      - echo
+    # 工具出站域名白名单：只约束 http_get / http_post / notify 的目标地址。
+    # 模型调用走 Provider，【不经过这里】，所以不需要在这里写模型域名。
+    # 注意：这里写的是【host 模式】，不是 URL——带 scheme 或路径的条目永远匹配不上。
+    # 留空即"一律拒绝"；要推送或发请求时把目标 host 加进来，例如 "*.example.com"。
+    allowed-domains:
+      - 127.0.0.1        # 本地消息接收器（tools/webhook_sink.py，端口 9099）
+      - localhost        # 同上，用 localhost 访问时
+      - api.open-meteo.com   # 真实天气接口（本次用 mock 天气工具，不联网，留作备用）
+  # 定时任务：第三种触发源（钟推）。到点拼一条 message，交给与 CLI / Web 完全相同的 AgentService。
+  # 触发规则不在这里配，而在各 Profile 的 schedules 段：
+  #   schedules:
+  #     - id: morning-brief          # 必填，Profile 内唯一（防重叠锁与日志定位都靠它）
+  #       cron: "0 0 9 * * *"        # 秒 分 时 日 月 周
+  #       timezone: Asia/Shanghai    # 可空；不写则用系统时区（启动日志会写明实际值）
+  #       message: "汇总昨天的 PR 并推送摘要"
+  # 单条配置非法（cron / 时区 / 缺 id / 缺消息）只跳过该条并记 ERROR，不影响启动与其它条目。
+  scheduler:
+    # 调度线程池大小。调度线程只在触发瞬间被占用，真正耗时的模型调用在任务线程里；
+    # 1 会让一个慢任务推迟其它任务的触发时刻，更大则可能在慢模型下堆出并发请求。
+    pool-size: 2
+  providers:
+    - name: deepseek
+      base-url: https://api.deepseek.com
+      api-key: ${DEEPSEEK_API_KEY}
+  #   - name: kimi
+  #     base-url: https://api.moonshot.cn/v1
+  #     api-key: ${KIMI_API_KEY}
+  # Agent 动态管理（30 节）的生成/模板模型。
+  # 它一身两职：
+  #   1) POST /api/v1/agents/{name}/generate-files 用它把"一句话描述"写成 AGENT.md；
+  #   2) 新建 Agent 时模板里预填的 provider / model 也取这里，避免建出一个调不动的 Agent。
+  # 未配置时新建与生成都会返回 503 并点名该配置键；其余功能不受影响。
+  author:
+    provider: deepseek
+    model: deepseek-flash
+
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+logging:
+  # 控制台日志固定 UTF-8：启动入口会把 System.out 接管到控制台宽字符通道
+  # （见 io.oryxos.boot.ConsoleEncoding），编码由宽字符 API 保证，不受控制台代码页影响。
+  charset:
+    console: UTF-8
+  level:
+    root: INFO
+    io.oryxos: DEBUG
+    org.springframework.web: INFO
+    org.hibernate.SQL: WARN
+  pattern:
+    # [runId] [sessionId] 由 AgentService 经 MDC 注入：一次处理的全部日志（含 ReActLoop /
+    # ToolExecutor）都带同一组标识——runId 对 agent_runs 那条记录，sessionId 串起整段对话，
+    # 不用在几百行里靠肉眼捞（FR-021 / SC-010）。
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{runId:-none}] [%X{sessionId:-none}] %logger{36} - %msg%n"

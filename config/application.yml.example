@@ -1,0 +1,68 @@
+# ============================================================
+# OryxOS 本地配置示例
+#
+# 用法：
+#   1. 复制本文件为 config/application.yml
+#        Linux/macOS:  cp config/application.yml.example config/application.yml
+#        Windows:      copy config\application.yml.example config\application.yml
+#   2. 填好密钥（推荐用环境变量占位，不写明文）
+#   3. 从仓库根目录启动：bin/oryxos.sh serve  或  bin\oryxos.cmd serve
+#
+# 为什么放这里：Spring Boot 会优先加载「工作目录/config/application.yml」，
+# 覆盖 JAR 内打包的 application.yaml。改这里不需要重新 mvn package。
+# 该文件已被 .gitignore 忽略，不会被提交。
+# ============================================================
+
+oryxos:
+  # ---------- LLM Provider ----------
+  # 本实例接哪些模型服务。Agent 只按 name 引用，不关心具体厂商。
+  # api-key 一律用 ${环境变量} 占位：配置与代码里不出现明文。
+  # 只配一个最省事；配多个时 name 不能重复。
+  providers:
+    - name: deepseek
+      base-url: https://api.deepseek.com
+      api-key: ${DEEPSEEK_API_KEY}
+
+    # - name: kimi
+    #   base-url: https://api.moonshot.cn/v1
+    #   api-key: ${KIMI_API_KEY}
+
+    # 本地推理（Ollama 的 OpenAI 兼容端点）：
+    # - name: ollama
+    #   base-url: http://localhost:11434/v1
+    #   api-key: ollama
+
+  # ---------- 「一句话生成 AGENT.md」用的模型 ----------
+  # 管理台的「生成草稿」与新建 Agent 模板取这里的 provider / model。
+  # 不配置时该功能返回 503，其余功能不受影响。
+  author:
+    provider: deepseek
+    model: deepseek-chat
+
+  # ---------- 工具沙箱（应用层白名单） ----------
+  # 任一清单为空 = 该维度【一律拒绝】，默认方向是收紧的。
+  # 路径按真实路径判定（`..` 与符号链接绕不过去）；域名是 host 模式，支持 *。
+  # 改了这里需要重启进程。
+  sandbox:
+    enabled: true
+    allowed-paths:
+      - ${user.dir}
+    allowed-commands:
+      - echo
+    allowed-domains:
+      - localhost
+      - 127.0.0.1
+    # allowed-interpreters:
+    #   - python
+    #   - python3
+    #   - node
+
+  # ---------- 工作区（可选） ----------
+  # 默认 <启动目录>/.oryxos；想换位置再放开这行。
+  # 注意：CLI 轻命令（init/status/profile…）读的是 -Doryxos.workspace=<基目录>，
+  #       会在该目录下再建 .oryxos/，两者语义略有差异，通常直接用默认值即可。
+  # workspace: ${user.dir}/.oryxos
+
+# 服务端口（默认 8080）
+# server:
+#   port: 8080

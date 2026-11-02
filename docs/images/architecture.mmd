@@ -1,0 +1,95 @@
+%% OryxOS 系统架构图
+%% 严格对应 docs/TechnicalSolution.md 的分层视图与 9 个 Maven 模块
+%% 主链路：启动入口 → 接入层 → 引擎层 → 能力层 → 基础层
+flowchart TB
+    %% ========== 样式定义 ==========
+    classDef l1_node fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#0d47a1,font-weight:600
+    classDef l2_node fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#1b5e20,font-weight:600
+    classDef l3_node fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px,color:#4a148c,font-weight:600
+    classDef l4_node fill:#eceff1,stroke:#455a64,stroke-width:2px,color:#263238,font-weight:600
+    classDef ext_node fill:#fff3e0,stroke:#ef6c00,stroke-width:2px,color:#e65100,font-weight:600
+
+    %% ========== 启动入口 ==========
+    subgraph BOOT["启动入口"]
+        direction LR
+        CLI_CMD["oryxos-cli<br/>Picocli 入口"]
+        BOOT_JAR["oryxos-boot<br/>fat JAR"]
+        CLI_CMD ~~~ BOOT_JAR
+    end
+
+    %% ========== 接入层（蓝）==========
+    subgraph L1["接入层 · 对外门面"]
+        direction LR
+        CLI["CLI Channel<br/>oryxos-channel-cli"]
+        WS["Web Service<br/>oryxos-web"]
+        CLI ~~~ WS
+    end
+
+    %% ========== 引擎层（绿）==========
+    subgraph L2["引擎层 · Agent 大脑"]
+        direction LR
+        REACT["ReActLoop<br/>oryxos-core"]
+        PB["PromptBuilder<br/>oryxos-core"]
+        TE["ToolExecutor<br/>oryxos-core"]
+        REACT ~~~ PB ~~~ TE
+    end
+
+    %% ========== 能力层（紫）==========
+    subgraph L3["能力层 · 三大核心能力"]
+        direction LR
+        PROVIDER["Provider<br/>对接 LLM<br/>oryxos-provider"]
+        MEMORY["Memory<br/>三层记忆<br/>oryxos-memory"]
+        TOOL["Tool<br/>工具体系<br/>oryxos-tool"]
+        PROVIDER ~~~ MEMORY ~~~ TOOL
+    end
+
+    %% ========== 基础层（灰）==========
+    subgraph L4["基础层 · 工程地基"]
+        direction LR
+        PROFILE["Profile / Bootstrap<br/>Skill 加载<br/>oryxos-core"]
+        SESSION["Session 存储<br/>oryxos-storage"]
+        SQLITE["SQLite<br/>审计落库<br/>oryxos-storage"]
+        CONFIG["配置与密钥<br/>oryxos-core"]
+        PROFILE ~~~ SESSION ~~~ SQLITE ~~~ CONFIG
+    end
+
+    %% ========== 外部依赖（橙）==========
+    subgraph EXT["外部依赖"]
+        direction TB
+        LLM["LLM 厂商 API"]
+        MCP["外部 MCP Server"]
+    end
+
+    %% ========== 主垂直链路 ==========
+    BOOT --> L1
+    L1 --> L2
+    L2 --> L3
+    L3 --> L4
+
+    %% ========== 层内主流程 ==========
+    CLI --> REACT
+    WS --> REACT
+    REACT --> PB
+    REACT --> TE
+    PB --> PROVIDER
+    PB --> MEMORY
+    TE --> TOOL
+
+    %% ========== 基础层支撑（虚线）==========
+    PROFILE -.-> PB
+    SESSION -.-> MEMORY
+    MEMORY -.-> SESSION
+    SQLITE -.-> TE
+    CONFIG -.-> PROVIDER
+    CONFIG -.-> PROFILE
+
+    %% ========== 外部调用 ==========
+    PROVIDER -.-> LLM
+    TOOL -.-> MCP
+
+    %% ========== 样式应用 ==========
+    class CLI,WS l1_node
+    class REACT,PB,TE l2_node
+    class PROVIDER,MEMORY,TOOL l3_node
+    class PROFILE,SESSION,SQLITE,CONFIG l4_node
+    class LLM,MCP,CLI_CMD,BOOT_JAR ext_node
